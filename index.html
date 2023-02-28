@@ -49,7 +49,18 @@
     var addItem = document.getElementsByClassName('title');
     addItem[0].style.fontWeight = 'bold';
     addItem[0].style.color = 'green';
-    
+
+    // Write the code as per the youtuber does
+    // Make the 3 rd element in the list have green background color
+    // Make all the elements in the list have bold color font
+
+    var li = document.getElementsByClassName('list-group-item');
+    li[2].style.backgroundColor = 'lightgreen';
+
+    for(let i = 0;i < li.length;i++){
+        li[i].style.fontWeight = 'bold';
+    }
+
   </script>
 
 </body>
