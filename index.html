@@ -26,6 +26,7 @@
       <li class="list-group-item">Item 2</li>
       <li class="list-group-item">Item 3</li>
       <li class="list-group-item">Item 4</li>
+      <li class="list-group-item-1">Item 5</li>
     </ul>
    </div>
   </div>
@@ -54,12 +55,22 @@
     // Make the 3 rd element in the list have green background color
     // Make all the elements in the list have bold color font
 
-    var li = document.getElementsByClassName('list-group-item');
-    li[2].style.backgroundColor = 'lightgreen';
+    // var li = document.getElementsByClassName('list-group-item');
+    // li[2].style.backgroundColor = 'lightgreen';
 
-    for(let i = 0;i < li.length;i++){
-        li[i].style.fontWeight = 'bold';
-    }
+    // for(let i = 0;i < li.length;i++){
+    //     li[i].style.fontWeight = 'bold';
+    // }
+  
+    // Add a new li element without the same class Name
+    // And try editing it with getelementsbyclassname and then by getelementbytagname
+    // var li = document.getElementsByClassName('list-group-item-1');
+    // li[4].style.color = 'blue';
+
+     var tag = document.getElementsByTagName('li');
+     for(let i = 0;i < tag.length;i++){
+      tag[i].style.backgroundColor = 'lightblue';
+     }
 
   </script>
 
