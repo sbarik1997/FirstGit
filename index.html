@@ -44,12 +44,12 @@
 
 
 
-    var borderBlk = document.getElementById('header-title');
-    borderBlk.style.borderBottom = 'solid 2px black';
+    // var borderBlk = document.getElementById('header-title');
+    // borderBlk.style.borderBottom = 'solid 2px black';
 
-    var addItem = document.getElementsByClassName('title');
-    addItem[0].style.fontWeight = 'bold';
-    addItem[0].style.color = 'green';
+    // var addItem = document.getElementsByClassName('title');
+    // addItem[0].style.fontWeight = 'bold';
+    // addItem[0].style.color = 'green';
 
     // Write the code as per the youtuber does
     // Make the 3 rd element in the list have green background color
@@ -67,10 +67,10 @@
     // var li = document.getElementsByClassName('list-group-item-1');
     // li[4].style.color = 'blue';
 
-     var tag = document.getElementsByTagName('li');
-     for(let i = 0;i < tag.length;i++){
-      tag[i].style.backgroundColor = 'lightblue';
-     }
+    //  var tag = document.getElementsByTagName('li');
+    //  for(let i = 0;i < tag.length;i++){
+    //   tag[i].style.backgroundColor = 'lightblue';
+    //  }
 
     //  Make the 2nd item have green background color
     //  Make the 3rd item invisible
@@ -84,14 +84,78 @@
     //  Using QuerySelectorALL change the font color to green for 2nd item in the item list
     //  Choose all the odd elements and make their background green using QuerySelectorALL﻿
 
-    var items = document.querySelectorAll('.list-group-item');
-    items[1].style.color = 'green';
+    // var items = document.querySelectorAll('.list-group-item');
+    // items[1].style.color = 'green';
 
-    var allItems = document.querySelectorAll('li:nth-child(odd)');
+    // var allItems = document.querySelectorAll('li:nth-child(odd)');
 
-    for(let i = 0;i < allItems.length;i++){
-      allItems[i].style.backgroundColor = 'green';
-    }
+    // for(let i = 0;i < allItems.length;i++){
+    //   allItems[i].style.backgroundColor = 'green';
+    // }
+   
+    // var itemList = document.querySelector('#items');
+    // console.log(itemList.parentNode);
+    // itemList.parentNode.style.backgroundColor = '#f4f4f4';
+    // console.log(itemList.parentNode.parentNode);
+
+    // console.log(itemList.parentElement);
+    // itemList.parentElement.style.backgroundColor = '#f4f4f4';
+    // console.log(itemList.parentElement.parentElement);
+
+    // console.log(itemList.childNodes);
+
+    // console.log(itemList.children);
+
+    // console.log(itemList.children[1]);
+    // itemList.children[1].style.backgroundColor = 'yellow';
+
+    // console.log(itemList.firstChild);
+    // console.log(itemList.firstElementChild);
+    // itemList.firstElementChild.textContent = 'Hello 1';
+    // itemList.lastElementChild.textContent = 'Hello 5';
+
+    // console.log(itemList.nextSibling);
+    // console.log(itemList.nextElementSibling);
+    // console.log(itemList.previousSibling);
+    // console.log(itemList.previousElementSibling);
+
+    //create element
+
+    var newDiv = document.createElement('Div');
+    //Add class
+    newDiv.className = 'hello';
+    //Add id
+    newDiv.id = 'hello1';
+    //Add attribute
+    newDiv.setAttribute('tittle','hello Div');
+
+    //create text node
+    var newDivText = document.createTextNode('Hello world');
+
+    //Add text to Div
+    newDiv.appendChild(newDivText);
+
+    var container = document.querySelector('header .container');
+    var h1 = document.querySelector('header h1');
+
+    container.insertBefore(newDiv,h1);
+    // console.log(newDiv);
+
+    var newdiv = document.createElement('Div');
+
+    newdiv.className = 'newdiv';
+    newdiv.id = 'newdiv-1';
+
+    var newdivText = document.createTextNode('Hello World');
+
+    newdiv.appendChild(newdivText);
+
+    // console.log(newdiv);
+
+    var Ul = document.querySelector('ul');
+    var Li = document.querySelector('ul li'); 
+
+    Ul.insertBefore(newdiv,Li);
 
   </script>
 
