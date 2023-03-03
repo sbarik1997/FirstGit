@@ -25,14 +25,15 @@
     <h2 class="title">Add Items</h2>
     <form id="addForm" class="form-inline mb-3">
       <input type="text" class="form-control mr-2" id="item">
+      <input type="text" class="form-control mr-2" id="description">
       <input type="submit" class="btn btn-dark" value="Submit">
     </form>
     <h2 class="title">Items</h2>
     <ul id="items" class="list-group">
-      <li class="list-group-item">Item 1 <button class="btn btn-danger btn-sm float-right delete">X</button></li>
-      <li class="list-group-item">Item 2 <button class="btn btn-danger btn-sm float-right delete">X</button></li>
-      <li class="list-group-item">Item 3 <button class="btn btn-danger btn-sm float-right delete">X</button></li>
-      <li class="list-group-item">Item 4 <button class="btn btn-danger btn-sm float-right delete">X</button></li>
+      <li class="list-group-item">Item 1 <button class="btn btn-danger btn-sm float-right delete">X</button><button class="btn btn-success btn-sm mr-2 float-right edit">EDIT</button></li>
+      <li class="list-group-item">Item 2 <button class="btn btn-danger btn-sm float-right delete">X</button><button class="btn btn-success btn-sm mr-2 float-right edit">EDIT</button></li>
+      <li class="list-group-item">Item 3 <button class="btn btn-danger btn-sm float-right delete">X</button><button class="btn btn-success btn-sm mr-2 float-right edit">EDIT</button></li>
+      <li class="list-group-item">Item 4 <button class="btn btn-danger btn-sm float-right delete">X</button><button class="btn btn-success btn-sm mr-2 float-right edit">EDIT</button></li>
     </ul>
    </div>
   </div>
@@ -40,6 +41,7 @@
   <script>
     var form1 = document.getElementById('addForm');
     var itemlist = document.getElementById('items');
+    var filter = document.getElementById('filter');
 
     //form submit event
 
@@ -49,42 +51,51 @@
 
     itemlist.addEventListener('click',removeItem);
 
+    //filter event
+
+    filter.addEventListener('keyup',addFilter);
+
     //Add item
     function addItem(e){
       e.preventDefault();
 
       //get input value
       var newItem = document.getElementById('item').value;
+
+      //get input value of second input
+      var newItem2 = document.getElementById('description').value;
       //create new li element
       var li = document.createElement('li');
       //Add className
       li.className = 'list-group-item';
       //Add textNode with input value
       li.appendChild(document.createTextNode(newItem));
+      li.appendChild(document.createTextNode(" "+ newItem2));
 
       itemlist.appendChild(li);
 
-      //creating edit button
-
-      var editBtn = document.createElement('button');
-
-      editBtn.className = 'btn btn-success btn-sm ml-2 float-right edit';
-
-      editBtn.appendChild(document.createTextNode('EDIT'));
-
-      li.appendChild(editBtn);
-
+      
       //create delete button element
-
+      
       var deletebtn = document.createElement('button');
-
+      
       deletebtn.className = "btn btn-danger btn-sm float-right delete";
-
+      
       deletebtn.appendChild(document.createTextNode('X'));
-
+      
       li.appendChild(deletebtn);
-
+      
+      //creating edit button
+  
+      var editBtn = document.createElement('button');
+  
+      editBtn.className = 'btn btn-success btn-sm mr-2 float-right edit';
+  
+      editBtn.appendChild(document.createTextNode('EDIT'));
+  
+      li.appendChild(editBtn);
     }
+    
 
     //Remove item
 
@@ -96,6 +107,25 @@
         }
       }
     }
+
+
+    //addfilter function
+
+    function addFilter(e){
+      var textItem = e.target.value.toLowerCase();
+      var items = itemlist.getElementsByTagName('li');
+      Array.from(items).forEach(function(item){
+         var text1 = item.firstChild.textContent;
+         var text2 = item.childNodes[1].textContent;
+        //  console.log(text1);
+         if(text1.concat(text2).toLowerCase().indexOf(textItem) != -1){
+          item.style.display = 'block';
+         }else{
+          item.style.display = 'none';
+         }
+      })
+    }
+
   </script>
 </body>
 </html>
