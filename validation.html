@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form validation</title>
+</head>
+<body>
+    <form action="#" onsubmit ="addLocalStorage(event)">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="username" required>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="emailid" required>
+    <label for="phonenum">Phone Number:</label>
+    <input type="text" id="phonenum" name="phonenumber">
+    <button id="btn">Click Here</button>
+    </form>
+    
+    
+    <script>
+        
+        function addLocalStorage(event){
+            event.preventDefault();
+            const UserName = event.target.username.value;
+            const emailId = event.target.emailid.value;
+            const phoneNum = event.target.phonenumber.value;
+            localStorage.setItem('username', UserName);
+            localStorage.setItem('email', emailId);
+            localStorage.setItem('phonenumber', phoneNum);
+            
+        }
+        
+        
+    </script>
+</body>
+</html>
