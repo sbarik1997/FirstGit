@@ -15,7 +15,9 @@
     <label for="phonenum">Phone Number:</label>
     <input type="text" id="phonenum" name="phonenumber">
     <button id="btn">Click Here</button>
-    </form>
+</form>
+
+    <ul id="list"></ul>
     
     
     <script>
@@ -25,18 +27,26 @@
             const UserName = event.target.username.value;
             const emailId = event.target.emailid.value;
             const phoneNum = event.target.phonenumber.value;
-            localStorage.setItem('username', UserName);
-            localStorage.setItem('email', emailId);
-            localStorage.setItem('phonenumber', phoneNum);
+            // localStorage.setItem('username', UserName);
+            // localStorage.setItem('email', emailId);
+            // localStorage.setItem('phonenumber', phoneNum);
             
             const obj = {
                 UserName,
                 emailId,
                 phoneNum
             }
-            localStorage.setItem('UserDetails', JSON.stringify(obj));
+            
+            localStorage.setItem(obj.emailId,  JSON.stringify(obj));
+            showElementOnScreen(obj); 
         }
         
+        function showElementOnScreen(obj){
+             const list = document.getElementById('list');
+             const li = document.createElement('li');
+             li.innerText += obj.UserName + "-" + obj.emailId + "-" + obj.phoneNum;
+             list.appendChild(li);  
+        }
         
     </script>
 </body>
