@@ -44,8 +44,16 @@
         function showElementOnScreen(obj){
              const list = document.getElementById('list');
              const li = document.createElement('li');
+             const deleteInput = document.createElement('input');
+             deleteInput.type = 'button';
+             deleteInput.value = 'delete';
+             deleteInput.onclick = () => {
+                localStorage.removeItem(obj.emailId);
+                list.removeChild(li);
+             }
              li.innerText += obj.UserName + "-" + obj.emailId + "-" + obj.phoneNum;
-             list.appendChild(li);  
+             li.appendChild(deleteInput);
+             list.appendChild(li);
         }
         
     </script>
