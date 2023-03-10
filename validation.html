@@ -45,14 +45,29 @@
              const list = document.getElementById('list');
              const li = document.createElement('li');
              const deleteInput = document.createElement('input');
+             const editInput = document.createElement('input');
+
              deleteInput.type = 'button';
              deleteInput.value = 'delete';
+             editInput.type = 'button';
+             editInput.value = 'Edit';
+             editInput.onclick = () => {
+                localStorage.removeItem(obj.emailId);
+                list.removeChild(li);
+                const nameInput = document.getElementById('name');
+                const emailInput = document.getElementById('email');
+                const numInput = document.getElementById('phonenum');
+                nameInput.value = obj.UserName;
+                emailInput.value = obj.emailId;
+                numInput.value = obj.phoneNum;
+             }
              deleteInput.onclick = () => {
                 localStorage.removeItem(obj.emailId);
                 list.removeChild(li);
              }
              li.innerText += obj.UserName + "-" + obj.emailId + "-" + obj.phoneNum;
              li.appendChild(deleteInput);
+             li.appendChild(editInput);
              list.appendChild(li);
         }
         
