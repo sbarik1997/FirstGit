@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense tracker</title>
+    <!-- css link -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <!-- script link -->
+    <!-- <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script> -->
+</head>
+
+<body>
+    <form onsubmit="addExpense(event)">
+        <div class="m-auto mt-5 container border">
+            <div class="row m-3">
+                <div class="col">
+                    <div class="mb-3">
+                        <label for="expenseAmount" class="form-label">Add Expense Amount</label>
+                        <input type="number" class="form-control" id="expenseAmount1" name="expenseAmount">
+                    </div>
+                    <div class="mb-3">
+                        <label for="expenseDescription" class="form-label">Choose Description</label>
+                        <input type="text" class="form-control" id="expenseDescription1" name="expenseDescription">
+                    </div>
+                    <div class="mb-3">
+                        <label for="expenseCatagory" class="form-label">Choose Catagory</label>
+                        <select class="form-select" aria-label="Default select example" name="expenseCatagory">
+                            <option selected>Choose a Catagory</option>
+                            <option value="Movie">Movie</option>
+                            <option value="Grocery">Grocery</option>
+                            <option value="Fashion">Fashion</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Medicines">Medicines</option>
+                            <option value="Home Decor">Home Decor</option>
+                            <option value="Personal Care">Personal Care</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <ul id="list"></ul>
+
+    <script>
+        function addExpense(event) {
+            event.preventDefault();
+            let expenseAmount = event.target.expenseAmount.value;
+            let expenseDescription = event.target.expenseDescription.value;
+            let expenseCatagory = event.target.expenseCatagory.value;
+
+            let expenseList;
+            let getExpense = localStorage.getItem("expenseList");
+            if (getExpense === null) {
+                expenseList = [];
+            } else {
+                expenseList = JSON.parse(localStorage.getItem("expenseList"));
+            }
+
+            expenseList.push({
+                expenseAmount,
+                expenseDescription,
+                expenseCatagory
+            });
+
+            localStorage.setItem("expenseList", JSON.stringify(expenseList));
+
+            showExpenseList(expenseList);
+        }
+
+        function showExpenseList(expenseList) {
+            let list = document.getElementById("list");
+            let li = document.createElement("li");
+            let editInput = document.createElement("input");
+            let deleteInput = document.createElement("input");
+
+            editInput.type = "button";
+            editInput.value = "EDIT";
+            deleteInput.type = "button";
+            deleteInput.value = "DELETE";
+
+            editInput.onclick = () => {
+                localStorage.removeItem("expenseList");
+                list.removeChild(li);
+                let amount = document.getElementById("expenseAmount1").value;
+                let description = document.getElementById("expenseDescription1").value;
+                let catagory = document.querySelector(".form-select").value;
+
+                amount = expenseList.expenseAmount;
+                description = expenseList.expenseDescription;
+                catagory = expenseList.expenseCatagory;
+            }
+
+            deleteInput.onclick = () => {
+                list.removeChild(li);
+                localStorage.removeItem("expenseList");
+            }
+
+            li.innerText += expenseList[expenseList.length - 1].expenseAmount + "  -  " + expenseList[expenseList.length - 1].expenseDescription + "  -  " + expenseList[expenseList.length - 1].expenseCatagory;
+            li.appendChild(editInput);
+            li.appendChild(deleteInput);
+            list.appendChild(li);
+        }
+    </script>
+</body>
+
+</html>
