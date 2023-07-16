@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking appointment page</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"
+     integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col">
+                <form onsubmit="appointmentData(event)">
+                    <div class="mb-3">
+                      <label for="inputName" class="form-label">Name</label>
+                      <input type="text" class="form-control" id="inputName" name="inputName">
+                    </div>
+                    <div class="mb-3">
+                      <label for="inputEmail" class="form-label">Email address</label>
+                      <input type="email" class="form-control" id="inputEmail" name="inputEmail" aria-describedby="emailHelp">
+                      <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col">
+                                <label for="inputNumber" class="form-label">Phone Number</label>
+                                <input type="number" class="form-control" id="inputNumber" name="inputNumber">
+                            </div>
+                            <div class="col">
+                                <label for="inputTime" class="form-label">Time For Call</label>
+                                <input type="time" class="form-control" id="inputTime" name="inputTime">
+                            </div>
+                        </div>
+                    </div>      
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
+            </div>
+         </div>
+    </div>
+
+    <div class="container border mt-3">
+        <ul id="list"></ul>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios@1.4.0/dist/axios.min.js"></script>
+
+
+    <script>
+        function appointmentData(event){
+          event.preventDefault();
+          const apointName = event.target.inputName.value;
+          const apointEmail = event.target.inputEmail.value;
+          const apointPhoneNumber = event.target.inputNumber.value;
+          const apointTime = event.target.inputTime.value;
+
+          const obj = {
+            apointName,
+            apointEmail,
+            apointPhoneNumber,
+            apointTime
+          }
+
+          axios.post("https://crudcrud.com/api/b8c82582ac7e48e0a03b68ca3f9d0531/appointmentData",obj)
+          .then((response) => {
+            showAppointDetails(obj);
+            console.log(response);
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+
+        }
+
+
+        function showAppointDetails(obj){
+            const list = document.getElementById('list');
+            const li = document.createElement('li');
+            const editData = document.createElement('input');
+            const deleteData = document.createElement('input');
+
+            editData.type = 'button';
+            editData.value = 'EDIT';
+            deleteData.type = 'button';
+            deleteData.value = 'DELETE';
+
+            editData.onclick = () => {
+                list.removeChild(li);
+
+                let appointName1 = document.getElementById('inputName');
+                let apointEmail1 = document.getElementById('inputEmail');
+                let apointPhoneNumber1 = document.getElementById('inputNumber');
+
+                appointName1.value = obj.apointName;
+                apointEmail1.value = obj.apointEmail;
+                apointPhoneNumber1.value = obj.apointPhoneNumber;
+            }
+
+            deleteData.onclick = () => {
+                list.removeChild(li);
+            }
+
+
+            li.innerText = obj.apointName + " - " + obj.apointEmail + " - " + obj.apointPhoneNumber;
+            li.appendChild(editData);
+            li.appendChild(deleteData);
+            list.appendChild(li);
+
+        }
+    </script>
+</body>
+</html>
