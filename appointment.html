@@ -61,7 +61,7 @@
             apointTime
           }
 
-          axios.post("https://crudcrud.com/api/b8c82582ac7e48e0a03b68ca3f9d0531/appointmentData",obj)
+          axios.post("https://crudcrud.com/api/4813d350ecb44aacb9556b09ecdc4368/appointmentData",obj)
           .then((response) => {
             showAppointDetails(obj);
             console.log(response);
@@ -71,6 +71,18 @@
           })
 
         }
+
+        window.addEventListener('DOMContentLoaded',() => {
+          axios.get('https://crudcrud.com/api/4813d350ecb44aacb9556b09ecdc4368/appointmentData')
+          .then((response) => {
+            for(var i = 0; i < response.data.length;i++){
+              showAppointDetails(response.data[i])
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+        })
 
 
         function showAppointDetails(obj){
