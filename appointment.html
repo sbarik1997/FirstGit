@@ -54,16 +54,16 @@
           const apointPhoneNumber = event.target.inputNumber.value;
           const apointTime = event.target.inputTime.value;
 
-          const obj = {
+          const user = {
             apointName,
             apointEmail,
             apointPhoneNumber,
             apointTime
           }
 
-          axios.post("https://crudcrud.com/api/4813d350ecb44aacb9556b09ecdc4368/appointmentData",obj)
+          axios.post("https://crudcrud.com/api/4813d350ecb44aacb9556b09ecdc4368/appointmentData",user)
           .then((response) => {
-            showAppointDetails(obj);
+            showAppointDetails(user);
             console.log(response);
           })
           .catch((err) => {
@@ -85,39 +85,38 @@
         })
 
 
-        function showAppointDetails(obj){
-            const list = document.getElementById('list');
-            const li = document.createElement('li');
-            const editData = document.createElement('input');
-            const deleteData = document.createElement('input');
+        function showAppointDetails(user){
+            document.getElementById('inputName').value = '';
+            document.getElementById('inputEmail').value = '';
+            document.getElementById('inputNumber').value = '';
+            document.getElementById('inputTime').value = '';
 
-            editData.type = 'button';
-            editData.value = 'EDIT';
-            deleteData.type = 'button';
-            deleteData.value = 'DELETE';
+            const parentNode = document.getElementById('list');
+            const childHtml  = `<li id='${user._id}'> ${user.apointName}-${user.apointEmail}-${user.apointPhoneNumber}-${user.apointTime}-
+              <button onclick=deleteUserDetails('${user._id}')> DELETE USER </button>
+              <button onclick=editUserDetails('${user.inputName}','${user.inputEmail}',${user.inputNumber})>EDIT USER</button></li>`
+                               
+            parentNode.innerHTML += childHtml;
 
-            editData.onclick = () => {
-                list.removeChild(li);
-
-                let appointName1 = document.getElementById('inputName');
-                let apointEmail1 = document.getElementById('inputEmail');
-                let apointPhoneNumber1 = document.getElementById('inputNumber');
-
-                appointName1.value = obj.apointName;
-                apointEmail1.value = obj.apointEmail;
-                apointPhoneNumber1.value = obj.apointPhoneNumber;
-            }
-
-            deleteData.onclick = () => {
-                list.removeChild(li);
-            }
+        }
 
 
-            li.innerText = obj.apointName + " - " + obj.apointEmail + " - " + obj.apointPhoneNumber;
-            li.appendChild(editData);
-            li.appendChild(deleteData);
-            list.appendChild(li);
+        function deleteUserDetails(userId){
+          axios.delete(`https://crudcrud.com/api/4813d350ecb44aacb9556b09ecdc4368/appointmentData/${userId}`)
+          .then((response) => {
+            removeUserFromScreen(userId)
+          })
+          .catch((err) => {
+            console.log(err);
+          })
+        }
 
+        function removeUserFromScreen(userId){
+          const parentNode = document.getElementById('list');
+          const childNodeToBeDeleted = document.getElementById('userId');
+          if(childNodeToBeDeleted){
+            parentNode.removeChild(childNodeToBeDeleted);
+          }
         }
     </script>
 </body>
