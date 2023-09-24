@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form validation</title>
+</head>
+<body>
+    <form action="#" onsubmit ="addLocalStorage(event)">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="username" required>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="emailid" required>
+    <label for="phonenum">Phone Number:</label>
+    <input type="text" id="phonenum" name="phonenumber">
+    <button id="btn">Click Here</button>
+</form>
+
+    <ul id="list"></ul>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.0/axios.min.js"></script>
+    <script>
+        
+        function addLocalStorage(event){
+            event.preventDefault();
+            const UserName = event.target.username.value;
+            const emailId = event.target.emailid.value;
+            const phoneNum = event.target.phonenumber.value;
+            // localStorage.setItem('username', UserName);
+            // localStorage.setItem('email', emailId);
+            // localStorage.setItem('phonenumber', phoneNum);
+            
+            const obj = {
+                UserName,
+                emailId,
+                phoneNum
+            }
+
+            axios.post('https://crudcrud.com/api/5c1eafe548af4c5d8fc6ef9ff7f43fef/appointData', obj)
+            .then((response) => {
+                showElementOnScreen(response.data);
+            })
+            .catch((err) => console.log(err))
+
+            // localStorage.setItem(obj.emailId,  JSON.stringify(obj));
+            
+            // showElementOnScreen(obj);
+        }
+        
+        function showElementOnScreen(obj){
+
+            document.getElementById('name').value = "";
+            document.getElementById('email').value = "";
+            document.getElementById('phonenum').value = "";
+
+
+             const list = document.getElementById('list');
+             const li = document.createElement('li');
+             const deleteInput = document.createElement('input');
+             const editInput = document.createElement('input');
+
+             deleteInput.type = 'button';
+             deleteInput.value = 'delete';
+             editInput.type = 'button';
+             editInput.value = 'Edit';
+             editInput.onclick = () => {
+                localStorage.removeItem(obj.emailId);
+                list.removeChild(li);
+                const nameInput = document.getElementById('name');
+                const emailInput = document.getElementById('email');
+                const numInput = document.getElementById('phonenum');
+                nameInput.value = obj.UserName;
+                emailInput.value = obj.emailId;
+                numInput.value = obj.phoneNum;
+             }
+             deleteInput.onclick = () => {
+                localStorage.removeItem(obj.emailId);
+                list.removeChild(li);
+             }
+             li.innerText += obj.UserName + "-" + obj.emailId + "-" + obj.phoneNum;
+             li.appendChild(deleteInput);
+             li.appendChild(editInput);
+             list.appendChild(li);
+        }
+    </script>
+</body>
+</html>
