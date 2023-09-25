@@ -47,6 +47,17 @@
             
             // showElementOnScreen(obj);
         }
+
+
+        window.addEventListener('DOMContentLoaded', () => {
+            axios.get('https://crudcrud.com/api/5c1eafe548af4c5d8fc6ef9ff7f43fef/appointData')
+            .then((response) => {
+                response.data.forEach(element => {
+                    showElementOnScreen(element);
+                });
+            })
+            .catch((err) => console.log(err))
+        })
         
         function showElementOnScreen(obj){
 
