@@ -37,7 +37,7 @@
                 phoneNum
             }
 
-            axios.post('https://crudcrud.com/api/fe49f509f804467eb1308193bd3ff195/appointData', obj)
+            axios.post('https://crudcrud.com/api/9172fb40f2da4787b0a8b6f35eee23a7/appointData', obj)
             .then((response) => {
                 showElementOnScreen(response.data);
             })
@@ -50,7 +50,7 @@
 
 
         window.addEventListener('DOMContentLoaded', () => {
-            axios.get('https://crudcrud.com/api/fe49f509f804467eb1308193bd3ff195/appointData')
+            axios.get('https://crudcrud.com/api/9172fb40f2da4787b0a8b6f35eee23a7/appointData')
             .then((response) => {
                 response.data.forEach(element => {
                     showElementOnScreen(element);
@@ -67,18 +67,30 @@
 
             const parentNode = document.getElementById('list');
             const childHtml = `<li id='${obj._id}'> ${obj.UserName}-${obj.emailId}-${obj.phoneNum}-
-              <button onclick=deleteObj('${obj._id}')> DELETE </button>
-              <button onclick=editObj('${obj._id}','${obj.UserName}','${obj.emailId}','${obj.phoneNum}')> EDIT </button></li>`
+              <button onclick=deleteObj('${obj._id}')>DELETE</button>
+              <button onclick=editObj('${obj.UserName}','${obj.emailId}','${obj.phoneNum}','${obj._id}')>EDIT</button></li>`
 
             parentNode.innerHTML += childHtml;
         }
 
 
+        function editObj(username,useremail,userphoneNumber,userId) {
+
+            document.getElementById('name').value = username;
+            document.getElementById('email').value = useremail;
+            document.getElementById('phonenum').value = userphoneNumber;
+
+            
+            deleteObj(userId);
+        }
+
+
         function deleteObj(userId) {
-            axios.delete(`https://crudcrud.com/api/fe49f509f804467eb1308193bd3ff195/appointData/${userId}`)
+            axios.delete(`https://crudcrud.com/api/9172fb40f2da4787b0a8b6f35eee23a7/appointData/${userId}`)
             .then((response) => {
                 deleteObjFromScreen(userId);
             })
+            .catch((err) => console.log(err))
         }
 
         function deleteObjFromScreen(userId) {
