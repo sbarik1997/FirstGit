@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Flipcart Item List</title>
+
+    <!-- bootstrap css link -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <!-- axios cdn script -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.1/axios.min.js"
+      integrity="sha512-emSwuKiMyYedRwflbZB2ghzX8Cw8fmNVgZ6yQNNXXagFzFOaQmbvQ1vmDkddHjm5AITcBIZfC7k4ShQSjgPAmQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <!-- Bootstarp code for creating form -->
+    <div class="container mt-5">
+      <div class="row">
+        <div class="col">
+            <!-- Form -->
+          <form onsubmit="createList(event)">
+            <div class="container">
+              <div class="row align-items-center justify-content-center">
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="productName" class="form-label">Product Name</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="productName"
+                      name="productName"
+                    />
+                  </div>
+                </div>
+
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="sellingPrice" class="form-label"
+                      >Selling Price</label
+                    >
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="sellingPrice"
+                      name="sellingPrice"
+                    />
+                  </div>
+                </div>
+
+                <div class="col">
+                  <div class="mb-3">
+                    <label for="selectCategory" class="form-label"
+                      >Choose a Category</label
+                    >
+                    <select
+                      class="form-select"
+                      id="selectCategory"
+                      name="selectCategory"
+                      aria-label="Default select example"
+                    >
+                      <option selected>Choose a Category</option>
+                      <option value="Electronics">Electronics</option>
+                      <option value="Foods">Foods</option>
+                      <option value="Skincare">Skincare</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="col mt-3">
+                  <button type="submit" class="btn btn-success">
+                    Add Product
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <!-- Creating Bootstrap lists for different products -->
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col">
+                <h2>Electronic Items :</h2>
+                <div class="mt-3 div" id="electronicDiv"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col">
+                <h2>Food Items :</h2>
+                <div class="mt-3 div" id="foodDiv"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col">
+                <h2>Skincare Items :</h2>
+                <div class="mt-3 div" id="skincareDiv"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- javascript code -->
+    <script>
+        function createList(event){
+           event.preventDefault();
+           const productName = event.target.productName.value;
+           const productPrice = event.target.sellingPrice.value;
+           const productCategory = event.target.selectCategory.value;
+
+           const itemObj = {
+            productName,
+            productPrice,
+            productCategory
+           }
+
+           axios.post('https://crudcrud.com/api/e5dfac39857c4ac1b458f2043dc5dca4/itemLists', itemObj)
+           .then((response) => {
+               console.log(response);
+               showItemList(response.data);
+           })
+           .catch((err) => console.log(err))
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            axios.get('https://crudcrud.com/api/e5dfac39857c4ac1b458f2043dc5dca4/itemLists')
+            .then((response) => {
+                response.data.forEach(element => {
+                    showItemList(element);
+                });
+            })
+        })
+
+
+        function showItemList(listData) {
+            document.getElementById('productName').value = '';
+            document.getElementById('sellingPrice').value = '';
+            document.getElementById('selectCategory').value = '';
+
+            const electronicDiv = document.getElementById('electronicDiv');
+            const foodDiv = document.getElementById('foodDiv');
+            const skincareDiv = document.getElementById('skincareDiv');
+
+            const childList = `<div id="${listData._id}" style="margin: 10px 10px">${listData.productName}-${listData.productPrice}-${listData.productCategory}--
+                <button id="deleteList" onclick="deleteListItem('${listData._id}','${listData.productCategory}')"> Delete </button></div>`;
+
+            if(listData.productCategory === 'Electronics'){
+                electronicDiv.innerHTML += childList;
+            }
+            if(listData.productCategory === 'Foods'){
+                foodDiv.innerHTML += childList;
+            }
+            if(listData.productCategory === 'Skincare'){
+                skincareDiv.innerHTML += childList;
+            }
+        }
+
+        function deleteListItem(listId,product_Category){
+            axios.delete(`https://crudcrud.com/api/e5dfac39857c4ac1b458f2043dc5dca4/itemLists/${listId}`)
+            .then((response) => {
+                deleteListFromScreen(listId,product_Category);
+            })
+            .catch((err) => console.log(err));
+        }
+
+        function deleteListFromScreen(listId,product_Category) {
+            const electronicDiv = document.getElementById('electronicDiv');
+            const foodDiv = document.getElementById('foodDiv');
+            const skincareDiv = document.getElementById('skincareDiv');
+            const deleteListItem = document.getElementById(listId);
+
+            if(deleteListItem && product_Category === 'Electronics'){
+                electronicDiv.removeChild(deleteListItem);
+            }
+            if(deleteListItem && product_Category === 'Foods'){
+                foodDiv.removeChild(deleteListItem);
+            }
+            if(deleteListItem && product_Category === 'Skincare'){
+                skincareDiv.removeChild(deleteListItem);
+            }
+        }
+    </script>
+  </body>
+</html>
