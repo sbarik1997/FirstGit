@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shop App</title>
+  </head>
+  <body>
+    <div class="container" style="margin: 50px 20px">
+      <div class="shopDiv">
+        <form style="display: flex; gap: 10px" onsubmit="makeShopList(event)">
+          <div class="candyName1">
+            <label for="candyName">Candy Name:</label>
+            <input type="text" id="candyName" name="candyName" />
+          </div>
+          <div class="candyDescription1">
+            <label for="candyDescription">Candy Description:</label>
+            <input type="text" id="candyDescription" name="candyDescription" />
+          </div>
+          <div class="candyPrice1">
+            <label for="candyPrice">Candy Price:</label>
+            <input type="number" id="candyPrice" name="candyPrice" />
+          </div>
+          <div class="candyQuantity1">
+            <label for="candyQuantity">Candy Quantity:</label>
+            <input type="number" id="candyQuantity" name="candyQuantity" />
+          </div>
+          <div class="addBtn">
+            <button type="submit">Add Item</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div
+      id="itemContainer"
+      style="margin: 10px; display: flex; flex-direction: column; gap: 10px"
+    ></div>
+
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.5.1/axios.min.js"
+      integrity="sha512-emSwuKiMyYedRwflbZB2ghzX8Cw8fmNVgZ6yQNNXXagFzFOaQmbvQ1vmDkddHjm5AITcBIZfC7k4ShQSjgPAmQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+
+    <script>
+        function makeShopList(event){
+            event.preventDefault();
+            const candyName = event.target.candyName.value;
+            const candyDescription = event.target.candyDescription.value;
+            const candyPrice = event.target.candyPrice.value;
+            const candyQuantity = event.target.candyQuantity.value;
+
+            // console.log(candyName, candyDescription, candyPrice, candyQuantity);
+
+            let obj = {
+                candyName,
+                candyDescription,
+                candyPrice,
+                candyQuantity
+            }
+
+            axios.post("https://crudcrud.com/api/2a7e6b9663114010affd846f6d3bae35/itemList", obj)
+            .then((response) => {
+                showShopList(response.data);
+            })
+            .catch((err) => console.log(err))
+        }
+
+
+        window.addEventListener('DOMContentLoaded', () => {
+            axios.get('https://crudcrud.com/api/2a7e6b9663114010affd846f6d3bae35/itemList')
+            .then((response) => {
+                response.data.forEach((items) => {
+                    showShopList(items);
+                })
+            })
+            .catch((err) => console.log(err))
+        })
+
+        function showShopList(itemsData){
+            document.getElementById('candyName').value = "";
+            document.getElementById('candyDescription').value = "";
+            document.getElementById('candyPrice').value = "";
+            document.getElementById('candyQuantity').value = "";
+
+            const itemContainer = document.getElementById('itemContainer');
+
+            const childItemContainer = `<div id="${itemsData._id}">${itemsData.candyName}-${itemsData.candyDescription}
+            -${itemsData.candyPrice}-${itemsData.candyQuantity}-<button id="subsOne" onclick="subsOne('${itemsData._id}','${itemsData.candyName}','${itemsData.candyDescription}','${itemsData.candyPrice}','${itemsData.candyQuantity}')">BUY1</button>
+            -<button id="subsTwo" onclick="subsTwo('${itemsData._id}','${itemsData.candyName}','${itemsData.candyDescription}','${itemsData.candyPrice}','${itemsData.candyQuantity}')">BUY2</button>
+            -<button id="subsThree" onclick="subsThree('${itemsData._id}','${itemsData.candyName}','${itemsData.candyDescription}','${itemsData.candyPrice}','${itemsData.candyQuantity}')">BUY3</button></div>`
+
+            itemContainer.innerHTML += childItemContainer;    
+        }
+
+        function subsOne(itemId,itemName,itemDes,itemPrice,itemQuantity){
+            let  updatedItemListObj = {
+                candyName: itemName,
+                candyDescription: itemDes,
+                candyPrice: itemPrice,
+                candyQuantity: (itemQuantity - '1').toString()
+              }
+
+            axios.put(`https://crudcrud.com/api/2a7e6b9663114010affd846f6d3bae35/itemList/${itemId}`, updatedItemListObj)
+            .then((response) => {
+              let responseItem = response.data;
+                deleteItemFromScreen(itemId);
+                showShopList(responseItem);
+            })
+        }
+
+        function subsTwo(itemId,itemName,itemDes,itemPrice,itemQuantity){
+            let  updatedItemListObj = {
+                candyName: itemName,
+                candyDescription: itemDes,
+                candyPrice: itemPrice,
+                candyQuantity: (itemQuantity - '2').toString()
+              }
+
+            axios.put(`https://crudcrud.com/api/2a7e6b9663114010affd846f6d3bae35/itemList/${itemId}`, updatedItemListObj)
+            .then((response) => {
+              let responseItem = response.data;
+                deleteItemFromScreen(itemId);
+                showShopList(responseItem);
+            })
+        }
+
+        function subsThree(itemId,itemName,itemDes,itemPrice,itemQuantity){
+            let  updatedItemListObj = {
+                candyName: itemName,
+                candyDescription: itemDes,
+                candyPrice: itemPrice,
+                candyQuantity: (itemQuantity - '3').toString()
+              }
+
+            axios.put(`https://crudcrud.com/api/2a7e6b9663114010affd846f6d3bae35/itemList/${itemId}`, updatedItemListObj)
+            .then((response) => {
+              let responseItem = response.data;
+                deleteItemFromScreen(itemId);
+                showShopList(responseItem);
+            })
+        }
+
+       
+        function deleteItemFromScreen(itemId){
+            const parentDiv = document.getElementById('itemContainer');
+            const childDiv = document.getElementById(itemId);
+
+            if(childDiv){
+                parentDiv.removeChild(childDiv);
+            }
+        }
+    </script>
+  </body>
+</html>
