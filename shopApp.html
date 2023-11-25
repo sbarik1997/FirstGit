@@ -45,113 +45,170 @@
     ></script>
 
     <script>
-        function makeShopList(event){
-            event.preventDefault();
-            const candyName = event.target.candyName.value;
-            const candyDescription = event.target.candyDescription.value;
-            const candyPrice = event.target.candyPrice.value;
-            const candyQuantity = event.target.candyQuantity.value;
+      async function makeShopList(event) {
+        event.preventDefault();
+        const candyName = event.target.candyName.value;
+        const candyDescription = event.target.candyDescription.value;
+        const candyPrice = event.target.candyPrice.value;
+        const candyQuantity = event.target.candyQuantity.value;
 
-            // console.log(candyName, candyDescription, candyPrice, candyQuantity);
+        // console.log(candyName, candyDescription, candyPrice, candyQuantity);
 
-            let obj = {
-                candyName,
-                candyDescription,
-                candyPrice,
-                candyQuantity
+        let obj = {
+          candyName: candyName,
+          candyDescription: candyDescription,
+          candyPrice: candyPrice,
+          candyQuantity: candyQuantity,
+          isCandyPutReq: false
+        };
+
+        try {
+          const postReq = await axios.post(
+            "https://crudcrud.com/api/f6ccb20e71eb407db3a9ac887db837d3/itemList",
+            obj,
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
             }
-
-            axios.post("https://crudcrud.com/api/2a7e6b9663114010affd846f6d3bae35/itemList", obj)
-            .then((response) => {
-                showShopList(response.data);
-            })
-            .catch((err) => console.log(err))
+          );
+          const postRes = await postReq.data;
+          showShopList(postRes);
+        } catch (error) {
+          console.log(error);
         }
+      }
 
+      window.addEventListener("DOMContentLoaded", async () => {
+        try {
+          const getReq = await axios.get(
+            "https://crudcrud.com/api/f6ccb20e71eb407db3a9ac887db837d3/itemList"
+          );
+          const getRes = await getReq.data;
 
-        window.addEventListener('DOMContentLoaded', () => {
-            axios.get('https://crudcrud.com/api/2a7e6b9663114010affd846f6d3bae35/itemList')
-            .then((response) => {
-                response.data.forEach((items) => {
-                    showShopList(items);
-                })
-            })
-            .catch((err) => console.log(err))
-        })
+          getRes.forEach((items) => {
+            showShopList(items);
+          });
+        } catch (error) {
+          console.log(error);
+        }
+      });
 
-        function showShopList(itemsData){
-            document.getElementById('candyName').value = "";
-            document.getElementById('candyDescription').value = "";
-            document.getElementById('candyPrice').value = "";
-            document.getElementById('candyQuantity').value = "";
+      function showShopList(itemsData) {
+        document.getElementById("candyName").value = "";
+        document.getElementById("candyDescription").value = "";
+        document.getElementById("candyPrice").value = "";
+        document.getElementById("candyQuantity").value = "";
 
-            const itemContainer = document.getElementById('itemContainer');
-
-            const childItemContainer = `<div id="${itemsData._id}">${itemsData.candyName}-${itemsData.candyDescription}
+        const itemContainer = document.getElementById("itemContainer");
+  
+        const childItemContainer = `<div id="${itemsData._id}">${itemsData.candyName}-${itemsData.candyDescription}
             -${itemsData.candyPrice}-${itemsData.candyQuantity}-<button id="subsOne" onclick="subsOne('${itemsData._id}','${itemsData.candyName}','${itemsData.candyDescription}','${itemsData.candyPrice}','${itemsData.candyQuantity}')">BUY1</button>
             -<button id="subsTwo" onclick="subsTwo('${itemsData._id}','${itemsData.candyName}','${itemsData.candyDescription}','${itemsData.candyPrice}','${itemsData.candyQuantity}')">BUY2</button>
-            -<button id="subsThree" onclick="subsThree('${itemsData._id}','${itemsData.candyName}','${itemsData.candyDescription}','${itemsData.candyPrice}','${itemsData.candyQuantity}')">BUY3</button></div>`
+            -<button id="subsThree" onclick="subsThree('${itemsData._id}','${itemsData.candyName}','${itemsData.candyDescription}','${itemsData.candyPrice}','${itemsData.candyQuantity}')">BUY3</button></div>`;
 
-            itemContainer.innerHTML += childItemContainer;    
+          itemContainer.innerHTML += childItemContainer;
+
+      }
+
+      async function subsOne(
+        itemId,
+        itemName,
+        itemDes,
+        itemPrice,
+        itemQuantity
+      ) {
+        let updatedItemListObj = {
+          candyName: itemName,
+          candyDescription: itemDes,
+          candyPrice: itemPrice,
+          candyQuantity: (itemQuantity - "1").toString(),
+          isCandyPutReq: true
+        };
+
+        try {
+          const axiosPutReq = await axios.put(
+            `https://crudcrud.com/api/f6ccb20e71eb407db3a9ac887db837d3/itemList/${itemId}`,
+            updatedItemListObj
+          );
+          const response = await axiosPutReq.config.data;
+          const parsedRes =  JSON.parse(response);
+          updatedListShowOnScreen(parsedRes,itemId);
+        } catch (error) {
+          console.log(error);
         }
+      }
 
-        function subsOne(itemId,itemName,itemDes,itemPrice,itemQuantity){
-            let  updatedItemListObj = {
-                candyName: itemName,
-                candyDescription: itemDes,
-                candyPrice: itemPrice,
-                candyQuantity: (itemQuantity - '1').toString()
-              }
+      async function subsTwo(
+        itemId,
+        itemName,
+        itemDes,
+        itemPrice,
+        itemQuantity
+      ) {
+        let updatedItemListObj = {
+          candyName: itemName,
+          candyDescription: itemDes,
+          candyPrice: itemPrice,
+          candyQuantity: (itemQuantity - "2").toString(),
+          isCandyPutReq: true
+        };
 
-            axios.put(`https://crudcrud.com/api/2a7e6b9663114010affd846f6d3bae35/itemList/${itemId}`, updatedItemListObj)
-            .then((response) => {
-              let responseItem = response.data;
-                deleteItemFromScreen(itemId);
-                showShopList(responseItem);
-            })
+        try {
+          const axiosPutReq = await axios.put(
+            `https://crudcrud.com/api/f6ccb20e71eb407db3a9ac887db837d3/itemList/${itemId}`,
+            updatedItemListObj
+          );
+          const response = await axiosPutReq.config.data;
+          const parsedRes =  JSON.parse(response);
+          updatedListShowOnScreen(parsedRes,itemId);
+        } catch (error) {
+          console.log(error);
         }
+      }
 
-        function subsTwo(itemId,itemName,itemDes,itemPrice,itemQuantity){
-            let  updatedItemListObj = {
-                candyName: itemName,
-                candyDescription: itemDes,
-                candyPrice: itemPrice,
-                candyQuantity: (itemQuantity - '2').toString()
-              }
+      async function subsThree(
+        itemId,
+        itemName,
+        itemDes,
+        itemPrice,
+        itemQuantity
+      ) {
+        let updatedItemListObj = {
+          candyName: itemName,
+          candyDescription: itemDes,
+          candyPrice: itemPrice,
+          candyQuantity: (itemQuantity - "3").toString(),
+          isCandyPutReq: true
+        };
 
-            axios.put(`https://crudcrud.com/api/2a7e6b9663114010affd846f6d3bae35/itemList/${itemId}`, updatedItemListObj)
-            .then((response) => {
-              let responseItem = response.data;
-                deleteItemFromScreen(itemId);
-                showShopList(responseItem);
-            })
+        try {
+          const axiosPutReq = await axios.put(
+            `https://crudcrud.com/api/f6ccb20e71eb407db3a9ac887db837d3/itemList/${itemId}`,
+            updatedItemListObj
+          );
+          const response = await axiosPutReq.config.data;
+          const parsedRes =  JSON.parse(response);
+          updatedListShowOnScreen(parsedRes,itemId);
+        } catch (error) {
+          console.log(error);
         }
+      }
 
-        function subsThree(itemId,itemName,itemDes,itemPrice,itemQuantity){
-            let  updatedItemListObj = {
-                candyName: itemName,
-                candyDescription: itemDes,
-                candyPrice: itemPrice,
-                candyQuantity: (itemQuantity - '3').toString()
-              }
+     function updatedListShowOnScreen(updatedItemData,dataId){
+        const updatedItemData_id = document.getElementById(dataId);
+         if(updatedItemData_id && updatedItemData.isCandyPutReq === true){
+          updatedItemData_id.innerHTML = `<div id='${dataId}'>${updatedItemData.candyName}-${updatedItemData.candyDescription}
+            -${updatedItemData.candyPrice}-${updatedItemData.candyQuantity}-<button id="subsOne" onclick="subsOne('${dataId}','${updatedItemData.candyName}','${updatedItemData.candyDescription}','${updatedItemData.candyPrice}','${updatedItemData.candyQuantity}')">BUY1</button>
+            -<button id="subsTwo" onclick="subsTwo('${dataId}','${updatedItemData.candyName}','${updatedItemData.candyDescription}','${updatedItemData.candyPrice}','${updatedItemData.candyQuantity}')">BUY2</button>
+            -<button id="subsThree" onclick="subsThree('${dataId}','${updatedItemData.candyName}','${updatedItemData.candyDescription}','${updatedItemData.candyPrice}','${updatedItemData.candyQuantity}')">BUY3</button></div>`;
 
-            axios.put(`https://crudcrud.com/api/2a7e6b9663114010affd846f6d3bae35/itemList/${itemId}`, updatedItemListObj)
-            .then((response) => {
-              let responseItem = response.data;
-                deleteItemFromScreen(itemId);
-                showShopList(responseItem);
-            })
-        }
+         }
 
-       
-        function deleteItemFromScreen(itemId){
-            const parentDiv = document.getElementById('itemContainer');
-            const childDiv = document.getElementById(itemId);
+     }
 
-            if(childDiv){
-                parentDiv.removeChild(childDiv);
-            }
-        }
+
+
     </script>
   </body>
 </html>
