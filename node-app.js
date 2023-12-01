@@ -20,17 +20,17 @@
 
 //Map on array
 
-const arr = ["apple", "oranges", " ", "mango", " ", "lemon"];
+// const arr = ["apple", "oranges", " ", "mango", " ", "lemon"];
 
-const newArr = arr.map((element, index) => {
-  if (element === " ") {
-    element = "empty string";
-  }
-  return element;
-});
+// const newArr = arr.map((element, index) => {
+//   if (element === " ") {
+//     element = "empty string";
+//   }
+//   return element;
+// });
 
-console.log(newArr);
-console.log(arr);
+// console.log(newArr);
+// console.log(arr);
 
 //  For const we can do certain operation on variable declair with const but we cannot reassign it.
 //  That's why it is not gives us error.
@@ -62,3 +62,37 @@ console.log(arr);
 
 // Answer: obj1 : {key1: 1, key2: 2}
 //         obj2 : {key1: 1000, key2: 2}
+
+
+// Destructuring
+
+//1) const obj1 = {'key1': 1, "key2": 2, "key3": 1000}
+
+// const { key1, key3} = { ...obj1}
+
+// console.log(key1, key3);
+
+// Answer: key1: 1 , key3: 1000
+
+
+// 2) const arr1 = ['value1', 'value2']
+
+// const [ val1, val2 ] = arr1
+
+// console.log(val1)
+
+// console.log(val2)
+
+// Answer: val1: 'value1', val2: 'value2'
+
+//3) const obj1 = {'key1': 1, "key2": 2, "key3": 1000}
+
+// let { key1, key3} = obj1
+
+// key1 = 20;
+
+// key3 = 123;
+
+// console.log(obj1.key1,obj1.key3)
+
+// Answer: obj1.key1: 1, obj1.key3: 1000
